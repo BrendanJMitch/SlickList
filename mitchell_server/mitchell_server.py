@@ -3,23 +3,26 @@ import logging
 import os
 import sys
 import waitress
+import json
 import werkzeug.middleware.proxy_fix
 import apscheduler.schedulers.background
-
 
 app = flask.Flask(__name__)
 app.wsgi_app = werkzeug.middleware.proxy_fix.ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_port=1)
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+config_path = os.path.join(dir_path, 'config', os.getenv('CONFIG'))
+with open(config_path, 'r') as config_file:
+    config = json.load(config_file)
+    app.config.update(config)
 
-# TODO: Make a more sustainable method for maintaining development and prduction
-# environments
-app.config['LOG_LEVEL'] = os.getenv('LOG_LEVEL', 'DEBUG')
-app.config['PORT'] = '8000'
-
-log_format = '%(levelname)s | %(name)s | %(message)s'
+log_format = '%(asctime)s | %(levelname)s | %(name)s | %(message)s'
 try:
-    stream = open(os.getenv('LOGFILE'), 'a')
+    home = os.getenv('HOME')
+    logfile_path = os.path.join(home, app.config['LOGFILE'])
+    stream = open(logfile_path, 'a+')
 except:
+    print("No logfile specified")
     stream = sys.stdout
 logging.basicConfig(
     format=log_format, 
@@ -27,8 +30,6 @@ logging.basicConfig(
     stream=stream
 )
 log = logging.getLogger(__name__)
-
-
 
 app.scheduler = apscheduler.schedulers.background.BackgroundScheduler()
 app.scheduler.start()
@@ -43,7 +44,7 @@ def index():
 
 
 def main():
-    log.info('Starting up Mitchell Server')
+    log.info('Starting up SlickList Server')
     log.info(f'LOG_LEVEL is {app.config["LOG_LEVEL"]}')
 
     if 'UNIX_SOCKET' in app.config:

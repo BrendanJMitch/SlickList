@@ -1,0 +1,5 @@
+{
+    "LOG_LEVEL": "INFO",
+    "LOGFILE": "slicklist_server.log",
+    "UNIX_SOCKET": "/tmp/slicklist.sock"
+}

@@ -5,6 +5,8 @@ DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 DB_PATH = os.path.join(DIR_PATH, 'slicklist_db.sqlite')
 
 def create_tables(cursor=None):
+    if not os.path.exists(DB_PATH):
+        open(DB_PATH, 'a').close()
     with open(os.path.join(DIR_PATH, 'create_tables.sql'), 'r') as sql_file:
         create_tables_cmds = sql_file.read()
     if cursor is None:

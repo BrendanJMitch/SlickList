@@ -1,6 +1,6 @@
 import sqlite3
 import os
-from src.db.manage_db import get_connection
+from slicklist.db.manage_db import get_connection
 
 class Accessor:
 

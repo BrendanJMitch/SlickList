@@ -1,9 +1,9 @@
-import unittest
-import src.db.manage_db
 import os
 import sqlite3
-from src.accessor.ingredient_accessor import IngredientAccessor
-from src.model.ingredient_model import Ingredient
+import unittest
+import slicklist.db.manage_db
+from slicklist.accessor.ingredient_accessor import IngredientAccessor
+from slicklist.model.ingredient_model import Ingredient
 
 
 class IngredientAccessorTestCase(unittest.TestCase):
@@ -12,11 +12,11 @@ class IngredientAccessorTestCase(unittest.TestCase):
     def setUpClass(this_class):
         # Run once for this class, before any tests are run
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        src.db.manage_db.DB_PATH = os.path.join(dir_path, 'test_db.sqlite')
+        slicklist.db.manage_db.DB_PATH = os.path.join(dir_path, 'test_db.sqlite')
 
     def setUp(self):
         # Run before each test method is run
-        src.db.manage_db.clear_db()
+        slicklist.db.manage_db.clear_db()
 
     def test_insert(self):
         accessor = IngredientAccessor()
@@ -32,7 +32,6 @@ class IngredientAccessorTestCase(unittest.TestCase):
         accessor.insert(ingredient)
         self.assertRaises(sqlite3.IntegrityError, accessor.insert, ingredient)
         
-
     def tearDown(self):
         # Run after each test method is run
         pass
